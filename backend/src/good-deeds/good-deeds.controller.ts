@@ -1,36 +1,38 @@
+// src/good-deeds/good-deeds.controller.ts
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { GoodDeedsService } from './good-deeds.service';
-import { CreateGoodDeedDto, UpdateGoodDeedDto } from './dto/good-deed.dto';
+import { CreateGoodDeedDto } from './dto/create-good-deed.dto';
+import { UpdateGoodDeedDto } from './dto/update-good-deed.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('good-deeds')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('good-deeds')
+@UseGuards(JwtAuthGuard)
 export class GoodDeedsController {
     constructor(private readonly goodDeedsService: GoodDeedsService) {}
 
     @Post()
     @ApiOperation({ summary: 'Create a new good deed' })
     @ApiResponse({ status: 201, description: 'The good deed has been successfully created.' })
-    create(@Request() req, @Body() createGoodDeedDto: CreateGoodDeedDto) {
-        return this.goodDeedsService.create(createGoodDeedDto, req.user.userId);
+    create(@Body() createGoodDeedDto: CreateGoodDeedDto, @Request() req) {
+        return this.goodDeedsService.create(createGoodDeedDto, req.user);
     }
 
     @Get()
-    @ApiOperation({ summary: 'Get all good deeds for the authenticated user' })
+    @ApiOperation({ summary: 'Get all good deeds for the current user' })
     @ApiResponse({ status: 200, description: 'Return all good deeds.' })
     findAll(@Request() req) {
-        return this.goodDeedsService.findAll(req.user.userId);
+        return this.goodDeedsService.findAll(req.user);
     }
 
     @Get(':id')
-    @ApiOperation({ summary: 'Get a specific good deed' })
+    @ApiOperation({ summary: 'Get a specific good deed by ID' })
     @ApiResponse({ status: 200, description: 'Return the good deed.' })
     @ApiResponse({ status: 404, description: 'Good deed not found.' })
     findOne(@Param('id') id: string, @Request() req) {
-        return this.goodDeedsService.findOne(+id, req.user.userId);
+        return this.goodDeedsService.findOne(+id, req.user);
     }
 
     @Patch(':id')
@@ -38,7 +40,7 @@ export class GoodDeedsController {
     @ApiResponse({ status: 200, description: 'The good deed has been successfully updated.' })
     @ApiResponse({ status: 404, description: 'Good deed not found.' })
     update(@Param('id') id: string, @Body() updateGoodDeedDto: UpdateGoodDeedDto, @Request() req) {
-        return this.goodDeedsService.update(+id, updateGoodDeedDto, req.user.userId);
+        return this.goodDeedsService.update(+id, updateGoodDeedDto, req.user);
     }
 
     @Delete(':id')
@@ -46,6 +48,6 @@ export class GoodDeedsController {
     @ApiResponse({ status: 200, description: 'The good deed has been successfully deleted.' })
     @ApiResponse({ status: 404, description: 'Good deed not found.' })
     remove(@Param('id') id: string, @Request() req) {
-        return this.goodDeedsService.remove(+id, req.user.userId);
+        return this.goodDeedsService.remove(+id, req.user);
     }
 }

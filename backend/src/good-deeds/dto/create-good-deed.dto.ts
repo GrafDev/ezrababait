@@ -1,3 +1,4 @@
+// src/good-deeds/dto/create-good-deed.dto.ts
 import { IsString, IsOptional, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -16,5 +17,3 @@ export class CreateGoodDeedDto {
     @IsBoolean()
     completed?: boolean;
 }
-
-export class UpdateGoodDeedDto extends CreateGoodDeedDto {}
