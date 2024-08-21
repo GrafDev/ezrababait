@@ -1,0 +1,35 @@
+
+services:
+  backend:
+    build: ../w/backend
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=your_username
+      - DATABASE_PASSWORD=your_password
+      - DATABASE_NAME=gooddeeds
+    depends_on:
+      - postgres
+
+  frontend:
+    build: ../w/frontend
+    ports:
+      - "3001:3000"
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: your_username
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: gooddeeds
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
