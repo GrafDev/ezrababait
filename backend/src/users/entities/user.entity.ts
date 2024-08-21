@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { GoodDeed } from '../../good-deeds/entities/good-deed.entity';
 
 @Entity()
@@ -20,6 +20,10 @@ export class User {
 
     @OneToMany(() => GoodDeed, goodDeed => goodDeed.user)
     goodDeeds: GoodDeed[];
+
+    @ManyToMany(() => User, user => user.friends)
+    @JoinTable()
+    friends: User[];
 
     @CreateDateColumn()
     createdAt: Date;
