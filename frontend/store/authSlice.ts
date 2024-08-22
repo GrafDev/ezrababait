@@ -7,8 +7,8 @@ import Router from 'next/router';
 interface User {
     id: string;
     username: string;
-    email?: string;
-    friendTag?: string;
+    email: string;
+    friendTag: string;
 }
 
 interface AuthState {
@@ -77,7 +77,7 @@ export const login = createAsyncThunk<
 
 export const register = createAsyncThunk<
     AuthResponse,
-    { username: string; email: string; password: string; friendTag: string },
+    { username: string; email: string; password: string }, // Убрали friendTag отсюда
     { rejectValue: string }
 >(
     'auth/register',

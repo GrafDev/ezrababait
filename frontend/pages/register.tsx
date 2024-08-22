@@ -1,4 +1,3 @@
-// pages/register.tsx
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, register } from '../store/authSlice';
@@ -7,12 +6,11 @@ const Register: React.FC = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [friendTag, setFriendTag] = useState('');
     const dispatch = useDispatch<AppDispatch>();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await dispatch(register({ username, email, password, friendTag }));
+        await dispatch(register({ username, email, password }));
     };
 
     return (
@@ -36,13 +34,6 @@ const Register: React.FC = () => {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-2 mb-4 border rounded"
-            />
-            <input
-                type="text"
-                placeholder="Friend Tag"
-                value={friendTag}
-                onChange={(e) => setFriendTag(e.target.value)}
                 className="w-full p-2 mb-4 border rounded"
             />
             <button type="submit" className="w-full p-2 text-white bg-blue-500 rounded hover:bg-blue-600">

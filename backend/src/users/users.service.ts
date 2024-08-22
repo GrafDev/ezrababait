@@ -16,19 +16,28 @@ export class UsersService {
         const existingUser = await this.usersRepository.findOne({
             where: [
                 { username: createUserDto.username },
-                { email: createUserDto.email },
-                { friendTag: createUserDto.friendTag }
+                { email: createUserDto.email }
             ]
         });
 
         if (existingUser) {
-            throw new ConflictException('Username, email or friendTag already exists');
+            throw new ConflictException('Username or email already exists');
         }
 
         const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+
+        // Generate friendTag
+        let friendTag = `@${createUserDto.username}`;
+        let counter = 1;
+        while (await this.usersRepository.findOne({ where: { friendTag } })) {
+            friendTag = `@${createUserDto.username}${counter}`;
+            counter++;
+        }
+
         const user = this.usersRepository.create({
             ...createUserDto,
             password: hashedPassword,
+            friendTag: friendTag,
         });
         return this.usersRepository.save(user);
     }

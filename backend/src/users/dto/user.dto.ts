@@ -27,14 +27,6 @@ export class CreateUserDto {
     @IsNotEmpty()
     @MinLength(6)
     password: string;
-
-    @ApiProperty({
-        description: 'The unique friend tag of the user',
-        example: 'johndoe#1234'
-    })
-    @IsString()
-    @IsNotEmpty()
-    friendTag: string;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
@@ -46,4 +38,13 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     @IsString()
     @MinLength(6)
     newPassword?: string;
+
+    @ApiProperty({
+        description: 'The unique friend tag of the user',
+        example: '@johndoe'
+    })
+    @IsOptional()
+    @IsString()
+    @IsNotEmpty()
+    friendTag?: string;
 }
