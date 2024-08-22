@@ -1,10 +1,8 @@
-import { Controller, Request, Post, UseGuards, Body, Get } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
-import { JwtAuthGuard } from './jwt-auth.guard';
 import { CreateUserDto } from '../users/dto/user.dto';
 import { UsersService } from '../users/users.service';
-import { ApiBearerAuth } from '@nestjs/swagger';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('auth')
@@ -31,15 +29,5 @@ export class AuthController {
     async register(@Body() createUserDto: CreateUserDto) {
         const user = await this.usersService.create(createUserDto);
         return this.authService.login(user);
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Get('me')
-    @ApiBearerAuth()
-    @ApiOperation({ summary: 'Get current user' })
-    @ApiResponse({ status: 200, description: 'Return the current user.' })
-    @ApiResponse({ status: 401, description: 'Unauthorized' })
-    async getCurrentUser(@Request() req) {
-        return req.user;
     }
 }

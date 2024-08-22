@@ -4,7 +4,7 @@ const authService = {
     register: (userData: { username: string; email: string; password: string }) => {
         return axios.post('/auth/register', userData);
     },
-    login: (credentials: { username: string; password: string }) => {
+    login: (credentials: { email: string; password: string }) => {
         return axios.post('/auth/login', credentials);
     },
     getCurrentUser: () => {

@@ -58,7 +58,7 @@ export const autoLogin = createAsyncThunk<
 
 export const login = createAsyncThunk<
     AuthResponse,
-    { username: string; password: string },
+    { email: string; password: string },
     { rejectValue: string }
 >(
     'auth/login',

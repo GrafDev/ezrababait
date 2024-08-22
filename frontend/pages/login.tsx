@@ -3,22 +3,22 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch, login } from '@/store/authSlice';
 
 const Login: React.FC = () => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch<AppDispatch>();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await dispatch(login({ username, password }));
+        await dispatch(login({ email, password }));
     };
 
     return (
         <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8">
             <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full p-2 mb-4 border rounded"
             />
             <input
