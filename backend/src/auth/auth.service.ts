@@ -31,4 +31,8 @@ export class AuthService {
             },
         };
     }
+
+    async getCurrentUser(userId: number) {
+        return this.usersService.findOne(userId);
+    }
 }

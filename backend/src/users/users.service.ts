@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import * as bcrypt from 'bcryptjs';
@@ -13,32 +13,17 @@ export class UsersService {
     ) {}
 
     async create(createUserDto: CreateUserDto): Promise<User> {
-        const existingUser = await this.usersRepository.findOne({
-            where: [
-                { username: createUserDto.username },
-                { email: createUserDto.email }
-            ]
-        });
+        await this.checkUserExists(createUserDto.username, createUserDto.email);
 
-        if (existingUser) {
-            throw new ConflictException('Username or email already exists');
-        }
-
-        const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-
-        // Generate friendTag
-        let friendTag = `@${createUserDto.username}`;
-        let counter = 1;
-        while (await this.usersRepository.findOne({ where: { friendTag } })) {
-            friendTag = `@${createUserDto.username}${counter}`;
-            counter++;
-        }
+        const hashedPassword = await this.hashPassword(createUserDto.password);
+        const friendTag = await this.generateUniqueFriendTag(createUserDto.username);
 
         const user = this.usersRepository.create({
             ...createUserDto,
             password: hashedPassword,
-            friendTag: friendTag,
+            friendTag,
         });
+
         return this.usersRepository.save(user);
     }
 
@@ -57,47 +42,57 @@ export class UsersService {
         return user;
     }
 
-    async findByUsername(username: string): Promise<User> {
+    async findByUsername(username: string): Promise<User | undefined> {
         return this.usersRepository.findOne({ where: { username } });
     }
-    async findByEmail(email: string): Promise<User> {
+
+    async findByEmail(email: string): Promise<User | undefined> {
         return this.usersRepository.findOne({ where: { email } });
     }
 
     async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
         const user = await this.findOne(id);
+
         if (updateUserDto.password) {
-            updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+            updateUserDto.password = await this.hashPassword(updateUserDto.password);
         }
+
+        if (updateUserDto.email && updateUserDto.email !== user.email) {
+            await this.checkEmailExists(updateUserDto.email);
+        }
+
+        if (updateUserDto.username && updateUserDto.username !== user.username) {
+            await this.checkUsernameExists(updateUserDto.username);
+            updateUserDto.friendTag = await this.generateUniqueFriendTag(updateUserDto.username);
+        }
+
         Object.assign(user, updateUserDto);
         return this.usersRepository.save(user);
     }
 
     async remove(id: number): Promise<void> {
-        const user = await this.usersRepository.findOne({
-            where: { id },
-            relations: ['friends', 'goodDeeds']
-        });
-        if (!user) {
-            throw new NotFoundException(`User with ID ${id} not found`);
-        }
+        const user = await this.findOne(id);
 
         // Remove friendships
-        user.friends = [];
-        await this.usersRepository.save(user);
+        await this.usersRepository.createQueryBuilder()
+            .relation(User, "friends")
+            .of(user)
+            .remove(user.friends);
 
         // Remove good deeds
-        if (user.goodDeeds) {
+        if (user.goodDeeds.length > 0) {
             await this.usersRepository.manager.remove(user.goodDeeds);
         }
 
-        // Finally, remove the user
+        // Remove the user
         await this.usersRepository.remove(user);
     }
 
     async addFriend(userId: number, friendTag: string): Promise<User> {
-        const user = await this.findOne(userId);
-        const friend = await this.usersRepository.findOne({ where: { friendTag } });
+        const [user, friend] = await Promise.all([
+            this.findOne(userId),
+            this.usersRepository.findOne({ where: { friendTag } })
+        ]);
 
         if (!friend) {
             throw new NotFoundException(`User with friendTag ${friendTag} not found`);
@@ -114,5 +109,46 @@ export class UsersService {
     async getFriends(userId: number): Promise<User[]> {
         const user = await this.findOne(userId);
         return user.friends;
+    }
+
+    private async checkUserExists(username: string, email: string): Promise<void> {
+        const existingUser = await this.usersRepository.findOne({
+            where: [{ username }, { email }]
+        });
+
+        if (existingUser) {
+            throw new ConflictException('Username or email already exists');
+        }
+    }
+
+    private async checkEmailExists(email: string): Promise<void> {
+        const existingUser = await this.findByEmail(email);
+        if (existingUser) {
+            throw new ConflictException('Email already exists');
+        }
+    }
+
+    private async checkUsernameExists(username: string): Promise<void> {
+        const existingUser = await this.findByUsername(username);
+        if (existingUser) {
+            throw new ConflictException('Username already exists');
+        }
+    }
+
+    private async generateUniqueFriendTag(username: string): Promise<string> {
+        let friendTag = `@${username}`;
+        let counter = 1;
+        while (await this.usersRepository.findOne({ where: { friendTag } })) {
+            friendTag = `@${username}${counter}`;
+            counter++;
+        }
+        return friendTag;
+    }
+
+    private async hashPassword(password: string): Promise<string> {
+        if (password.length < 6) {
+            throw new BadRequestException('Password must be at least 6 characters long');
+        }
+        return bcrypt.hash(password, 10);
     }
 }
