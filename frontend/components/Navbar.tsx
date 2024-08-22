@@ -1,9 +1,9 @@
-// components/Navbar.tsx
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '@/store/authSlice';
+import { User } from 'lucide-react';
 
 const Navbar: React.FC = () => {
     const router = useRouter();
@@ -16,37 +16,41 @@ const Navbar: React.FC = () => {
     };
 
     return (
-        <nav className="bg-blue-500 p-4">
-            <div className="container mx-auto flex justify-between items-center">
-                <Link href="/" className="text-white text-2xl font-bold">
-                    Good Deeds
-                </Link>
-                <div>
-                    {user ? (
-                        <>
-                            <Link href="/dashboard" className="text-white mr-4">
-                                Dashboard
+        <nav className="bg-white border-b border-pink-100">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between h-16 items-center">
+                    <div className="flex items-center">
+                        <Link href="/" className="flex-shrink-0 flex items-center">
+                            <span className="text-2xl font-bold text-pink-500">Good Deeds</span>
+                        </Link>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                        {user && (
+                            <Link href="/friends" className="text-gray-600 hover:text-pink-500 flex items-center">
+                                <User className="w-5 h-5 mr-1" />
+                                <span className="text-sm">Friends</span>
                             </Link>
-                            <Link href="/friends" className="text-white mr-4">
-                                Friends
-                            </Link>
+                        )}
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        {user ? (
                             <button
                                 onClick={handleLogout}
-                                className="text-white bg-red-500 px-4 py-2 rounded hover:bg-red-600"
+                                className="text-sm bg-pink-500 text-white px-3 py-1 rounded-full hover:bg-pink-600"
                             >
                                 Logout
                             </button>
-                        </>
-                    ) : (
-                        <>
-                            <Link href="/login" className="text-white mr-4">
-                                Login
-                            </Link>
-                            <Link href="/register" className="text-white">
-                                Register
-                            </Link>
-                        </>
-                    )}
+                        ) : (
+                            <>
+                                <Link href="/login" className="text-sm text-gray-600 hover:text-pink-500">
+                                    Login
+                                </Link>
+                                <Link href="/register" className="text-sm bg-pink-500 text-white px-3 py-1 rounded-full hover:bg-pink-600">
+                                    Register
+                                </Link>
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
         </nav>
