@@ -1,4 +1,3 @@
-// services/authService.ts
 import axios from '../utils/axios';
 
 const authService = {
@@ -7,6 +6,9 @@ const authService = {
     },
     login: (credentials: { username: string; password: string }) => {
         return axios.post('/auth/login', credentials);
+    },
+    getCurrentUser: () => {
+        return axios.get('/auth/me');
     },
 };
 

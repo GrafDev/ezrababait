@@ -13,7 +13,7 @@ const Home: React.FC = () => {
             {user ? (
                 <div>
                     <p className="mb-4 text-gray-700">Hello, {user.username}! Ready to make the world a better place?</p>
-                    <Link href="/chat" className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded">
+                    <Link href="/" className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded">
                         Start Chatting
                     </Link>
                 </div>
