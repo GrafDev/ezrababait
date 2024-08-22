@@ -1,24 +1,38 @@
 // src/good-deeds/good-deeds.controller.ts
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Logger } from '@nestjs/common';
 import { GoodDeedsService } from './good-deeds.service';
 import { CreateGoodDeedDto } from './dto/create-good-deed.dto';
 import { UpdateGoodDeedDto } from './dto/update-good-deed.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { User } from '../users/entities/user.entity';
 
 @ApiTags('good-deeds')
 @ApiBearerAuth()
 @Controller('good-deeds')
 @UseGuards(JwtAuthGuard)
 export class GoodDeedsController {
+    private readonly logger = new Logger(GoodDeedsController.name);
+
     constructor(private readonly goodDeedsService: GoodDeedsService) {}
 
     @Post()
     @ApiOperation({ summary: 'Create a new good deed' })
     @ApiResponse({ status: 201, description: 'The good deed has been successfully created.' })
-    create(@Body() createGoodDeedDto: CreateGoodDeedDto, @Request() req) {
-        return this.goodDeedsService.create(createGoodDeedDto, req.user);
+    async create(@Body() createGoodDeedDto: CreateGoodDeedDto, @Request() req) {
+        this.logger.log('Received request to create a good deed');
+        this.logger.debug(`Request body: ${JSON.stringify(createGoodDeedDto)}`);
+        this.logger.debug(`Request user: ${JSON.stringify(req.user)}`);
+
+        if (!req.user || !req.user.id) {
+            this.logger.error('User not found in request');
+            throw new Error('User not authenticated');
+        }
+
+        const user = req.user as User;
+        return this.goodDeedsService.create(createGoodDeedDto, user);
     }
+
 
     @Get()
     @ApiOperation({ summary: 'Get all good deeds for the current user' })

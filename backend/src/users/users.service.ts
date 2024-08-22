@@ -62,7 +62,25 @@ export class UsersService {
     }
 
     async remove(id: number): Promise<void> {
-        await this.usersRepository.delete(id);
+        const user = await this.usersRepository.findOne({
+            where: { id },
+            relations: ['friends', 'goodDeeds']
+        });
+        if (!user) {
+            throw new NotFoundException(`User with ID ${id} not found`);
+        }
+
+        // Remove friendships
+        user.friends = [];
+        await this.usersRepository.save(user);
+
+        // Remove good deeds
+        if (user.goodDeeds) {
+            await this.usersRepository.manager.remove(user.goodDeeds);
+        }
+
+        // Finally, remove the user
+        await this.usersRepository.remove(user);
     }
 
     async addFriend(userId: number, friendTag: string): Promise<User> {

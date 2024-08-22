@@ -1,6 +1,6 @@
 
 // src/good-deeds/good-deeds.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GoodDeed } from './entities/good-deed.entity';
@@ -10,18 +10,32 @@ import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class GoodDeedsService {
+    private readonly logger = new Logger(GoodDeedsService.name);
+
     constructor(
         @InjectRepository(GoodDeed)
         private goodDeedsRepository: Repository<GoodDeed>,
     ) {}
 
     async create(createGoodDeedDto: CreateGoodDeedDto, user: User): Promise<GoodDeed> {
-        const goodDeed = this.goodDeedsRepository.create({
-            ...createGoodDeedDto,
-            user: user,
-            userId: user.id,
-        });
-        return this.goodDeedsRepository.save(goodDeed);
+        this.logger.log(`Attempting to create a good deed for user ${user.id}`);
+        this.logger.debug(`CreateGoodDeedDto: ${JSON.stringify(createGoodDeedDto)}`);
+        this.logger.debug(`User: ${JSON.stringify(user)}`);
+
+        try {
+            const goodDeed = this.goodDeedsRepository.create({
+                ...createGoodDeedDto,
+                user: user,
+            });
+            this.logger.debug(`Created good deed object: ${JSON.stringify(goodDeed)}`);
+
+            const savedGoodDeed = await this.goodDeedsRepository.save(goodDeed);
+            this.logger.log(`Successfully saved good deed with id ${savedGoodDeed.id}`);
+            return savedGoodDeed;
+        } catch (error) {
+            this.logger.error(`Failed to create good deed: ${error.message}`, error.stack);
+            throw error;
+        }
     }
 
     async findAll(user: User): Promise<GoodDeed[]> {

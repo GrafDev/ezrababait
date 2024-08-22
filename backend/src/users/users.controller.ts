@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { AddFriendDto } from './dto/add-friend.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { User } from './decorators/user.decorator';
 
 @ApiTags('users')
 @Controller('users')
