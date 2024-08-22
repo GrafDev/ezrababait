@@ -24,11 +24,6 @@ export class GoodDeedsController {
         this.logger.debug(`Request body: ${JSON.stringify(createGoodDeedDto)}`);
         this.logger.debug(`Request user: ${JSON.stringify(req.user)}`);
 
-        if (!req.user || !req.user.id) {
-            this.logger.error('User not found in request');
-            throw new Error('User not authenticated');
-        }
-
         const user = req.user as User;
         return this.goodDeedsService.create(createGoodDeedDto, user);
     }
