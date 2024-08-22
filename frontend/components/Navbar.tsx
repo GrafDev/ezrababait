@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '@/store/authSlice';
-import { User } from 'lucide-react';
+import Image from 'next/image';
 
 const Navbar: React.FC = () => {
     const router = useRouter();
@@ -16,28 +16,36 @@ const Navbar: React.FC = () => {
     };
 
     return (
-        <nav className="bg-white border-b border-pink-100">
+        <nav className="bg-white border-b border-[#a0627b]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
-                    {!user && <div className="flex items-center">
-                        <Link href="/" className="flex-shrink-0 flex items-center">
-                            <span className="text-2xl font-bold text-pink-500">Good Deeds</span>
-                        </Link>
-                    </div>}
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center">
+                        <Image
+                            src="/logo.png"
+                            alt="Logo"
+                            width={90}
+                            height={40}
+                        />
+                    </div>
+                    <div className="flex items-center space-x-4">
                         {user ? (
-                            <button
-                                onClick={handleLogout}
-                                className="text-sm bg-pink-500 text-white px-3 py-1 rounded-full hover:bg-pink-600"
-                            >
-                                Logout
-                            </button>
+                            <>
+                                <span className="text-sm text-gray-600">
+                                    Welcome, {user.username}
+                                </span>
+                                <button
+                                    onClick={handleLogout}
+                                    className="text-sm bg-[#a0627b] text-white px-3 py-1 rounded-full hover:bg-[#8c556c]"
+                                >
+                                    Logout
+                                </button>
+                            </>
                         ) : (
                             <>
-                                <Link href="/login" className="text-sm text-gray-600 hover:text-pink-500">
+                                <Link href="/login" className="text-sm text-gray-600 hover:text-[#a0627b]">
                                     Login
                                 </Link>
-                                <Link href="/register" className="text-sm bg-pink-500 text-white px-3 py-1 rounded-full hover:bg-pink-600">
+                                <Link href="/register" className="text-sm bg-[#a0627b] text-white px-3 py-1 rounded-full hover:bg-[#8c556c]">
                                     Register
                                 </Link>
                             </>

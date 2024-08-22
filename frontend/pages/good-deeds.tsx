@@ -25,7 +25,7 @@ const GoodDeeds: React.FC = () => {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-6 text-pink-700">Your Good Deeds</h1>
+            <h1 className="text-3xl font-bold mb-6 text-[#a0627b]">Your Good Deeds</h1>
             <AddGoodDeedForm />
             <GoodDeedsList goodDeeds={goodDeeds} />
         </div>

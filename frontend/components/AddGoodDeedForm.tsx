@@ -30,7 +30,7 @@ const AddGoodDeedForm: React.FC = () => {
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full p-2 mb-2 border rounded"
             />
-            <button type="submit" className="w-full p-2 text-white bg-pink-500 rounded hover:bg-pink-600">
+            <button type="submit" className="w-full p-2 text-white bg-[#a0627b] rounded hover:bg-[#8c556c]">
                 Add Good Deed
             </button>
         </form>
