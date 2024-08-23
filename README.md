@@ -8,7 +8,7 @@
 * **Backend:** NestJS, TypeScript, PostgreSQL
 * **Инфраструктура:** Docker
 
-#  [ezrababait good-deeds]([https://grafdev.github.io/Stellar-burger/](https://drive.google.com/file/d/1-QTj699DJ4q-AfQF1gZHQkQdKmfShz06/view?pli=1))
+<img src="[./src/images/stellar-burger.gif](https://drive.google.com/file/d/1-QTj699DJ4q-AfQF1gZHQkQdKmfShz06/view?pli=1)" alt="ezrababait good-deeds">
 
 **Установка:**
 1. Клонируйте репозиторий: `git clone https://github.com/your_username/good-deeds.git`
