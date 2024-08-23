@@ -1,4 +1,4 @@
-https://drive.google.com/file/d/1-QTj699DJ4q-AfQF1gZHQkQdKmfShz06/view?usp=sharing
+![Главная страница приложения](https://drive.google.com/file/d/1-QTj699DJ4q-AfQF1gZHQkQdKmfShz06/view?usp=sharing)
 Тестовое задание full-stack developer
 Стэк технологий:
 • Back – TS, NestJS, PostgreSQL , Docker
