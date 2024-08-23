@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards} from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
@@ -26,6 +26,34 @@ export class UsersController {
     @ApiResponse({ status: 200, description: 'Return all users.' })
     findAll() {
         return this.usersService.findAll();
+    }
+
+    @Get('search')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiOperation({ summary: 'Search users by friendTag' })
+    @ApiResponse({ status: 200, description: 'Return found users.' })
+    async searchUsers(@Query('query') query: string) {
+        return this.usersService.searchUsers(query);
+    }
+
+    @Get('friends')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiOperation({ summary: 'Get user\'s friends' })
+    @ApiResponse({ status: 200, description: 'Return the user\'s friends.' })
+    async getFriends(@User() user) {
+        return this.usersService.getFriends(user.id);
+    }
+
+    @Post('friends/add')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiOperation({ summary: 'Add a friend' })
+    @ApiResponse({ status: 200, description: 'The friend has been successfully added.' })
+    async addFriend(@User() user, @Body() addFriendDto: AddFriendDto) {
+        console.log('Adding friend:', user.id, addFriendDto.friendTag); // Для отладки
+        return this.usersService.addFriend(user.id, addFriendDto.friendTag);
     }
 
     @Get(':id')
@@ -57,26 +85,5 @@ export class UsersController {
     @ApiResponse({ status: 404, description: 'User not found.' })
     remove(@Param('id') id: string) {
         return this.usersService.remove(+id);
-    }
-
-    @Post(':id/friends')
-    @UseGuards(JwtAuthGuard)
-    @ApiBearerAuth()
-    @ApiOperation({ summary: 'Add a friend' })
-    @ApiResponse({ status: 200, description: 'The friend has been successfully added.' })
-    @ApiResponse({ status: 400, description: 'Bad Request.' })
-    @ApiResponse({ status: 404, description: 'User not found.' })
-    addFriend(@Param('id') id: string, @Body() addFriendDto: AddFriendDto) {
-        return this.usersService.addFriend(+id, addFriendDto.friendTag);
-    }
-
-    @Get(':id/friends')
-    @UseGuards(JwtAuthGuard)
-    @ApiBearerAuth()
-    @ApiOperation({ summary: 'Get user\'s friends' })
-    @ApiResponse({ status: 200, description: 'Return the user\'s friends.' })
-    @ApiResponse({ status: 404, description: 'User not found.' })
-    getFriends(@Param('id') id: string) {
-        return this.usersService.getFriends(+id);
     }
 }
