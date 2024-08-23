@@ -4,12 +4,14 @@ import { GoodDeed } from '@/types/goodDeed';
 
 interface GoodDeedsState {
     goodDeeds: GoodDeed[];
+    friendGoodDeeds: GoodDeed[];
     isLoading: boolean;
     error: string | null;
 }
 
 const initialState: GoodDeedsState = {
     goodDeeds: [],
+    friendGoodDeeds: [],
     isLoading: false,
     error: null,
 };
@@ -38,6 +40,18 @@ export const addGoodDeed = createAsyncThunk(
     }
 );
 
+export const fetchFriendGoodDeeds = createAsyncThunk(
+    'goodDeeds/fetchFriendGoodDeeds',
+    async (friendId: number, { rejectWithValue }) => {
+        try {
+            const response = await axios.get(`/good-deeds/friend/${friendId}`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue('Failed to fetch friend\'s good deeds');
+        }
+    }
+);
+
 const goodDeedsSlice = createSlice({
     name: 'goodDeeds',
     initialState,
@@ -57,6 +71,17 @@ const goodDeedsSlice = createSlice({
             })
             .addCase(addGoodDeed.fulfilled, (state, action: PayloadAction<GoodDeed>) => {
                 state.goodDeeds.push(action.payload);
+            })
+            .addCase(fetchFriendGoodDeeds.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchFriendGoodDeeds.fulfilled, (state, action: PayloadAction<GoodDeed[]>) => {
+                state.isLoading = false;
+                state.friendGoodDeeds = action.payload;
+            })
+            .addCase(fetchFriendGoodDeeds.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
             });
     },
 });

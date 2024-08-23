@@ -62,4 +62,10 @@ export class GoodDeedsService {
         const goodDeed = await this.findOne(id, user);
         await this.goodDeedsRepository.remove(goodDeed);
     }
+    async getFriendGoodDeeds(friendId: number): Promise<GoodDeed[]> {
+        return this.goodDeedsRepository.find({
+            where: { userId: friendId },
+            order: { createdAt: 'DESC' }
+        });
+    }
 }

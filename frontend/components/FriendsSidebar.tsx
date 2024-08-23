@@ -29,9 +29,7 @@ const FriendsSidebar: React.FC<FriendsSidebarProps> = ({ onFriendSelect }) => {
 
     const handleAddFriend = async (friendTag: string) => {
         await dispatch(addFriend(friendTag));
-        // Обновляем список друзей после добавления
         dispatch(getFriends());
-        // Обновляем результаты поиска, чтобы убрать добавленного друга
         handleSearch();
     };
 
@@ -43,11 +41,11 @@ const FriendsSidebar: React.FC<FriendsSidebarProps> = ({ onFriendSelect }) => {
                     placeholder="Search friends (@username)"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border border-gray-300 rounded"
                 />
                 <button
                     onClick={handleSearch}
-                    className="mt-2 w-full bg-blue-500 text-white p-2 rounded"
+                    className="mt-2 w-full bg-[#a0627b] hover:bg-[#8c556c] text-white p-2 rounded"
                 >
                     Search
                 </button>
@@ -55,14 +53,16 @@ const FriendsSidebar: React.FC<FriendsSidebarProps> = ({ onFriendSelect }) => {
 
             {searchResults.length > 0 && (
                 <div className="mb-4">
-                    <h3 className="font-bold mb-2">Search Results:</h3>
+                    <h3 className="font-bold mb-2 text-[#a0627b]">Search Results:</h3>
                     <ul>
                         {searchResults.map((user) => (
                             <li key={user.id} className="flex justify-between items-center mb-2">
-                                {user.username} ({user.friendTag})
+                                <span className="text-gray-700">
+                                    {user.username} ({user.friendTag})
+                                </span>
                                 <button
                                     onClick={() => handleAddFriend(user.friendTag)}
-                                    className="bg-green-500 text-white p-1 rounded"
+                                    className="bg-[#a0627b] hover:bg-[#8c556c] text-white p-1 rounded"
                                 >
                                     +
                                 </button>
@@ -73,17 +73,17 @@ const FriendsSidebar: React.FC<FriendsSidebarProps> = ({ onFriendSelect }) => {
             )}
 
             <div>
-                <h3 className="font-bold mb-2">Friends:</h3>
+                <h3 className="font-bold mb-2 text-[#a0627b]">Friends:</h3>
                 {isLoading ? (
-                    <p>Loading...</p>
+                    <p className="text-gray-700">Loading...</p>
                 ) : error ? (
-                    <p>Error: {error}</p>
+                    <p className="text-red-500">Error: {error}</p>
                 ) : (
                     <ul className="max-h-64 overflow-y-auto">
                         {friends.map((friend) => (
                             <li
                                 key={friend.id}
-                                className="mb-2 cursor-pointer hover:text-blue-500"
+                                className="mb-2 cursor-pointer text-gray-700 hover:text-[#a0627b]"
                                 onClick={() => onFriendSelect(friend.id)}
                             >
                                 {friend.username} ({friend.friendTag})

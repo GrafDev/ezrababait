@@ -59,4 +59,11 @@ export class GoodDeedsController {
     remove(@Param('id') id: string, @Request() req) {
         return this.goodDeedsService.remove(+id, req.user);
     }
+
+    @Get('friend/:friendId')
+    @ApiOperation({ summary: 'Get friend\'s good deeds' })
+    @ApiResponse({ status: 200, description: 'Return friend\'s good deeds.' })
+    getFriendGoodDeeds(@Param('friendId') friendId: string) {
+        return this.goodDeedsService.getFriendGoodDeeds(+friendId);
+    }
 }
