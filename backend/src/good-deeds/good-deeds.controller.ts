@@ -72,4 +72,10 @@ export class GoodDeedsController {
     async completeGoodDeed(@Param('id') id: string, @Request() req) {
         return this.goodDeedsService.completeGoodDeed(+id, req.user);
     }
+    @Patch(':id/uncomplete')
+    @ApiOperation({ summary: 'Uncomplete a good deed' })
+    @ApiResponse({ status: 200, description: 'The good deed has been uncompleted.' })
+    async uncompleteGoodDeed(@Param('id') id: string, @Request() req) {
+        return this.goodDeedsService.uncompleteGoodDeed(+id, req.user);
+    }
 }

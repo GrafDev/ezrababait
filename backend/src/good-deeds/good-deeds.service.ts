@@ -73,4 +73,9 @@ export class GoodDeedsService {
         goodDeed.completed = true;
         return this.goodDeedsRepository.save(goodDeed);
     }
+    async uncompleteGoodDeed(id: number, user: User): Promise<GoodDeed> {
+        const goodDeed = await this.findOne(id, user);
+        goodDeed.completed = false;
+        return this.goodDeedsRepository.save(goodDeed);
+    }
 }

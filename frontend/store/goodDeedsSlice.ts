@@ -63,6 +63,18 @@ export const completeGoodDeed = createAsyncThunk(
         }
     }
 );
+export const uncompleteGoodDeed = createAsyncThunk<GoodDeed, number, { rejectValue: string }>(
+    'goodDeeds/uncompleteGoodDeed',
+    async (id: number, { rejectWithValue }) => {
+        try {
+            const response = await axios.patch<GoodDeed>(`/good-deeds/${id}/uncomplete`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue('Failed to uncomplete good deed');
+        }
+    }
+);
+
 
 const goodDeedsSlice = createSlice({
     name: 'goodDeeds',
@@ -98,6 +110,12 @@ const goodDeedsSlice = createSlice({
                 state.error = action.payload as string;
             })
             .addCase(completeGoodDeed.fulfilled, (state, action: PayloadAction<GoodDeed>) => {
+                const index = state.goodDeeds.findIndex(deed => deed.id === action.payload.id);
+                if (index !== -1) {
+                    state.goodDeeds[index] = action.payload;
+                }
+            })
+            .addCase(uncompleteGoodDeed.fulfilled, (state, action: PayloadAction<GoodDeed>) => {
                 const index = state.goodDeeds.findIndex(deed => deed.id === action.payload.id);
                 if (index !== -1) {
                     state.goodDeeds[index] = action.payload;
