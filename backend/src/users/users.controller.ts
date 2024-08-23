@@ -33,8 +33,8 @@ export class UsersController {
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Search users by friendTag' })
     @ApiResponse({ status: 200, description: 'Return found users.' })
-    async searchUsers(@Query('query') query: string) {
-        return this.usersService.searchUsers(query);
+    async searchUsers(@Query('query') query: string, @User() user) {
+        return this.usersService.searchUsers(query, user.id);
     }
 
     @Get('friends')

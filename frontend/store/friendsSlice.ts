@@ -33,7 +33,8 @@ export const addFriend = createAsyncThunk(
     'friends/addFriend',
     async (friendTag: string, { rejectWithValue }) => {
         try {
-            return await friendsService.addFriend(friendTag);
+            const addedFriend = await friendsService.addFriend(friendTag);
+            return addedFriend;
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 return rejectWithValue(error.response?.data?.message || 'An error occurred while adding friend');

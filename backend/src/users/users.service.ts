@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
+import {Repository, Like, Not} from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import * as bcrypt from 'bcryptjs';
@@ -91,11 +91,19 @@ export class UsersService {
         await this.usersRepository.remove(user);
     }
 
-    async searchUsers(query: string): Promise<User[]> {
-        return this.usersRepository.find({
-            where: { friendTag: Like(`%${query}%`) },
+    async searchUsers(query: string, currentUserId: number): Promise<User[]> {
+        const currentUser = await this.findOne(currentUserId);
+
+        const users = await this.usersRepository.find({
+            where: {
+                friendTag: Like(`%${query}%`),
+                id: Not(currentUserId) // Исключаем текущего пользователя из результатов
+            },
             select: ['id', 'username', 'friendTag']
         });
+
+        // Фильтруем уже добавленных друзей
+        return users.filter(user => !currentUser.friends.some(friend => friend.id === user.id));
     }
 
     async addFriend(userId: number, friendTag: string): Promise<User> {

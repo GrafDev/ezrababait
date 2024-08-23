@@ -20,13 +20,19 @@ const FriendsSidebar: React.FC<FriendsSidebarProps> = ({ onFriendSelect }) => {
 
     const handleSearch = async () => {
         if (searchQuery.startsWith('@') && searchQuery.length > 1) {
-            const results = await dispatch(searchUsers(searchQuery));
-            setSearchResults(results.payload as User[]);
+            const result = await dispatch(searchUsers(searchQuery));
+            if (searchUsers.fulfilled.match(result)) {
+                setSearchResults(result.payload as User[]);
+            }
         }
     };
 
-    const handleAddFriend = (friendTag: string) => {
-        dispatch(addFriend(friendTag));
+    const handleAddFriend = async (friendTag: string) => {
+        await dispatch(addFriend(friendTag));
+        // Обновляем список друзей после добавления
+        dispatch(getFriends());
+        // Обновляем результаты поиска, чтобы убрать добавленного друга
+        handleSearch();
     };
 
     return (
