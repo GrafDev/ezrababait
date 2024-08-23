@@ -53,6 +53,21 @@ Good Deeds App - это платформа для отслеживания и о
    DATABASE_NAME=gooddeeds
    JWT_SECRET=your_jwt_secret
    JWT_EXPIRATION_TIME=1h
+   # Database configuration
+FRONTEND_URL=http://localhost:3000
+
+# Server configuration
+PORT=3000
+
+# CORS configuration
+CORS_ORIGIN=http://localhost:3001
+
+# JWT configuration
+JWT_SECRET=hL6zWaKHk2K5BfX9WsTp3M8Y7gF4qNxJ
+JWT_EXPIRATION_TIME=604800
+
+# Optional: Node environment
+NODE_ENV=development
    ```
 
 3. Запустите приложение с помощью Docker Compose:
