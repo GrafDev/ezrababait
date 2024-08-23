@@ -8,7 +8,7 @@
 * **Backend:** NestJS, TypeScript, PostgreSQL
 * **Инфраструктура:** Docker
 
-# Учебный проект в рамках курса React-Продвинутый: [ezrababait good-deeds]([https://grafdev.github.io/Stellar-burger/](https://drive.google.com/file/d/1-QTj699DJ4q-AfQF1gZHQkQdKmfShz06/view?pli=1))
+#  [ezrababait good-deeds]([https://grafdev.github.io/Stellar-burger/](https://drive.google.com/file/d/1-QTj699DJ4q-AfQF1gZHQkQdKmfShz06/view?pli=1))
 
 **Установка:**
 1. Клонируйте репозиторий: `git clone https://github.com/your_username/good-deeds.git`
