@@ -27,7 +27,10 @@ const GoodDeedsList: React.FC<GoodDeedsListProps> = ({ goodDeeds }) => {
     return (
         <ul className="space-y-4">
             {goodDeeds.map((deed) => (
-                <li key={deed.id} className="bg-white p-4 rounded shadow flex justify-between items-center">
+                <li
+                    key={deed.id}
+                    className="bg-white p-4 rounded-lg shadow-lg flex justify-between items-center"
+                >
                     <div className={deed.completed ? 'opacity-50' : ''}>
                         <h3 className="text-lg font-semibold">{deed.title}</h3>
                         <p className="text-gray-600">{deed.description}</p>

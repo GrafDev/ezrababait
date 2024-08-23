@@ -13,7 +13,10 @@ const FriendGoodDeedsList: React.FC<FriendGoodDeedsListProps> = ({ goodDeeds }) 
     return (
         <ul className="space-y-4">
             {goodDeeds.map((deed) => (
-                <li key={deed.id} className="bg-white p-4 rounded shadow">
+                <li
+                    key={deed.id}
+                    className="bg-white p-4 rounded-lg shadow-lg"
+                >
                     <h3 className="text-lg font-semibold">{deed.title}</h3>
                     <p className="text-gray-600">{deed.description}</p>
                 </li>

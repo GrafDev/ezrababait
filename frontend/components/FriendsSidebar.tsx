@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
 import { searchUsers, addFriend, getFriends } from '@/store/friendsSlice';
 import { User } from '@/types/user';
+import { Search, UserPlus } from 'lucide-react';
 
 interface FriendsSidebarProps {
     onFriendSelect: (id: number) => void;
@@ -34,21 +35,25 @@ const FriendsSidebar: React.FC<FriendsSidebarProps> = ({ onFriendSelect }) => {
     };
 
     return (
-        <div className="w-64 bg-white shadow-md p-4">
+        <div className="w-96 bg-white shadow-lg rounded-lg p-4"> {/* White background, larger shadow, and increased border radius */}
             <div className="mb-4">
-                <input
-                    type="text"
-                    placeholder="Search friends (@username)"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded"
-                />
-                <button
-                    onClick={handleSearch}
-                    className="mt-2 w-full bg-[#a0627b] hover:bg-[#8c556c] text-white p-2 rounded"
-                >
-                    Search
-                </button>
+                <div className="relative">
+                    <input
+                        type="text"
+                        placeholder="Search friends (@username)"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full p-2 pr-10 border border-gray-300 rounded"
+                    />
+
+                    <button
+                        onClick={handleSearch}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#a0627b] hover:bg-[#8c556c] text-white p-2 rounded-full"
+                    >
+                        <Search size={18} />
+                    </button>
+                </div>
+
             </div>
 
             {searchResults.length > 0 && (
@@ -62,9 +67,9 @@ const FriendsSidebar: React.FC<FriendsSidebarProps> = ({ onFriendSelect }) => {
                                 </span>
                                 <button
                                     onClick={() => handleAddFriend(user.friendTag)}
-                                    className="bg-[#a0627b] hover:bg-[#8c556c] text-white p-1 rounded"
+                                    className="bg-[#a0627b] hover:bg-[#8c556c] text-white p-1 rounded-full"
                                 >
-                                    +
+                                    <UserPlus size={18} />
                                 </button>
                             </li>
                         ))}
