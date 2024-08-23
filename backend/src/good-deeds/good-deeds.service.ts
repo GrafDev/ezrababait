@@ -68,4 +68,9 @@ export class GoodDeedsService {
             order: { createdAt: 'DESC' }
         });
     }
+    async completeGoodDeed(id: number, user: User): Promise<GoodDeed> {
+        const goodDeed = await this.findOne(id, user);
+        goodDeed.completed = true;
+        return this.goodDeedsRepository.save(goodDeed);
+    }
 }

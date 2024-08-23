@@ -66,4 +66,10 @@ export class GoodDeedsController {
     getFriendGoodDeeds(@Param('friendId') friendId: string) {
         return this.goodDeedsService.getFriendGoodDeeds(+friendId);
     }
+    @Patch(':id/complete')
+    @ApiOperation({ summary: 'Complete a good deed' })
+    @ApiResponse({ status: 200, description: 'The good deed has been completed.' })
+    async completeGoodDeed(@Param('id') id: string, @Request() req) {
+        return this.goodDeedsService.completeGoodDeed(+id, req.user);
+    }
 }
